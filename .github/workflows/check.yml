@@ -17,6 +17,5 @@ jobs:
       - run: python check_availability.py
         env:
           TARGET_URL: ${{ vars.TARGET_URL }}
-          TARGET_DATES: ${{ vars.TARGET_DATES }}
-          TARGET_TIME_ZONES: ${{ vars.TARGET_TIME_ZONES }}
+          WATCH_SHEET_URL: ${{ vars.WATCH_SHEET_URL }}
           NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
