@@ -1,0 +1,22 @@
+name: Check availability
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python check_availability.py
+        env:
+          TARGET_URL: ${{ vars.TARGET_URL }}
+          TARGET_DATES: ${{ vars.TARGET_DATES }}
+          TARGET_TIME_ZONES: ${{ vars.TARGET_TIME_ZONES }}
+          NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
