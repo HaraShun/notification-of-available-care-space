@@ -1,4 +1,4 @@
-name: Check availability
+name: "✅️ Check availability"
 
 on:
   schedule:
