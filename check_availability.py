@@ -119,14 +119,18 @@ def check(availability, targets):
 
 
 def notify(body: str):
-    topic_url = os.environ["NTFY_TOPIC_URL"]
+    topic_url = os.environ["NTFY_TOPIC_URL"].rstrip("/")
+    # ntfy は JSON publishing 経由なら UTF-8 タイトルを送れる
+    # https://ntfy.sh/<topic> → base="https://ntfy.sh", topic="<topic>"
+    base, _, topic = topic_url.rpartition("/")
     r = requests.post(
-        topic_url,
-        data=body.encode("utf-8"),
-        headers={
-            "Title": "空き通知",
-            "Priority": "high",
-            "Tags": "baby",
+        base,
+        json={
+            "topic": topic,
+            "title": "空き通知",
+            "message": body,
+            "priority": 4,
+            "tags": ["baby"],
         },
         timeout=30,
     )
