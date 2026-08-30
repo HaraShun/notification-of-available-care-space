@@ -106,11 +106,18 @@ def fetch_availability(url: str):
 
 
 def check(availability, targets):
+    # サイトは直近30日分しか出さない。窓外(=まだ出ていない)と
+    # 窓内なのに引けない(=シートの書式ミス)は別物なので区別して出す
+    dates = {d for d, _ in availability}
+    lo, hi = min(dates), max(dates)
     hits = []
     for d, z in targets:
         mark = availability.get((d, z))
         if mark is None:
-            print(f"  {d} {z}: (該当セルなし)")
+            if not lo <= d <= hi:
+                print(f"  {d} {z}: サイト未掲載 (表示範囲 {lo}〜{hi} 外)")
+            else:
+                print(f"  {d} {z}: ★該当セルなし — シートの記載を確認 (範囲内なのに引けない)")
             continue
         print(f"  {d} {z}: {mark}")
         if mark in AVAILABLE_MARKS:
